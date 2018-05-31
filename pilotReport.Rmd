@@ -1,0 +1,245 @@
+---
+title: "CARPS Reproducibility Report"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r}
+articleID <- "4-11-2014_PS" # insert the article ID code here e.g., "10-3-2015_PS"
+reportType <- 'pilot'
+pilotNames <- "Barbara Born, Elizabeth Blevins" # insert the pilot's name here e.g., "Tom Hardwicke". If there are multiple pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+copilotNames <- "Tom Hardwicke" # insert the co-pilot's name here e.g., "Michael Frank". If there are multiple co-pilots enter both names in a character string e.g., "Tom Hardwicke, Bob Dylan"
+pilotTTC <- 720 # insert the pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+copilotTTC <- NA # insert the co- pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
+pilotStartDate <- as.Date("10/29/17", format = "%m/%d/%y") # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+copilotStartDate <- as.Date("", format = "%m/%d/%y") # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+completionDate <- as.Date("", format = "%m/%d/%y") # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+```
+
+-------
+
+#### Methods summary: 
+
+  In the paper *Multisensory Integration in Complete Unawareness: Evidence from Audiovisual Congruency Priming* (Faivre, Mudrik, Schwartz, et al., 2014), the authors measured multisensory integration of two subliminal stimuli at the behavioral level. **Multisensory integration*** is the combination of information that is spread across sensory modalities into a new, unified representation. In this study, participants were presented with a pair of digits - one auditory and one visual - and asked to judge whether the two were identical or different from one another.  
+  In experiment 01, that is the focus os this replication, the goal was to demonstrate whether a subliminal visual stimulus can be integrated with a supraliminal auditory stimulus. In this particular experiment, 26 students from the California Institute of Technology, aged 18 to 34, participated in 192 trials testing their reaction to pairs of stimulus. In each trial, they have a prime situation consisting of a pair of written and spoken digits that could be 2, 4, 6, and 8, and they were asked to determine whether the auditory digit was identical or different from the visual digit. Then, they received the target pair, consisting of a written and a spoken letter that could be "b," "j," "k," or "m," and they were asked the same question. 
+  In the first 96 trials, both visual and spoken primes were supraliminal, i.e., participants were in the conscious condition. In the next 96 trials, the visual condition was masked, creating an unconscious condition. 9 participants who could discriminate of the prime pairs with an accuracy above 65% in the unconscious block were excluded from the analysis. The final sample analyzed in this replication, therefore, consists of 17 subjects.  
+
+------
+
+#### Target outcomes: 
+
+  The analysis of experiment 01 focused on the unconscious condition, i.e., the final 96 trials of that experiment. This replication focused on the following statistics: 
+  
+> Primes accuracy: 53.3 [50.2, 56.4]
+
+> t-test: t(16) = 2.06, p = .06
+
+> Targets accuracy: 92.3 [89.8, 94.8]
+
+The accuracy refers to the percentage of correct identification of whether the pairs were identical or different, both in prime and target situations. They tested the prime accuracy against change (50%). 
+
+------
+
+[The chunk below sets up some formatting options for the R Markdown document]
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
+```
+
+## Step 1: Load packages
+
+[Some useful packages are being loaded below. You can add any additional ones you might need too.]
+
+```{r}
+library(tidyverse) # for data munging
+library(knitr) # for kable table formating
+library(haven) # import and export 'SPSS', 'Stata' and 'SAS' Files
+library(readxl) # import excel files
+library(CARPSreports) # custom report functions
+```
+
+```{r}
+# Prepare report object. This will be updated automatically by the reproCheck function each time values are compared.
+reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
+```
+
+## Step 2: Load data
+
+```{r}
+data1 = read.table("data/Exp1/Exp1_1.dat")
+data2 = read.table("data/Exp1/Exp1_2.dat")
+data3 = read.table("data/Exp1/Exp1_3.dat")
+data4 = read.table("data/Exp1/Exp1_4.dat")
+data5 = read.table("data/Exp1/Exp1_5.dat")
+data6 = read.table("data/Exp1/Exp1_6.dat")
+data7 = read.table("data/Exp1/Exp1_7.dat")
+data8 = read.table("data/Exp1/Exp1_8.dat")
+data9 = read.table("data/Exp1/Exp1_9.dat")
+data10 = read.table("data/Exp1/Exp1_10.dat")
+data11 = read.table("data/Exp1/Exp1_11.dat")
+data12 = read.table("data/Exp1/Exp1_12.dat")
+data13 = read.table("data/Exp1/Exp1_13.dat")
+data14 = read.table("data/Exp1/Exp1_14.dat")
+data15 = read.table("data/Exp1/Exp1_15.dat")
+data16 = read.table("data/Exp1/Exp1_16.dat")
+data17 = read.table("data/Exp1/Exp1_17.dat")
+```
+
+## Step 3: Tidy data
+
+```{r}
+#Append the datasets
+data <- rbind(data1, data2, data3, data4, data5, data6, data7, data8, data9, data10, data11, data12, data13, data14, data15, data16, data17)
+
+#tidy data
+
+##Renaming variables
+data.tidy <- data %>%
+  rename(subj_id=V2, 
+         trial_num=V3,
+         prim_cong=V4,
+         targ_cong=V5,
+         mask_audi=V6,
+         mask_visu=V7,
+         prim_audi=V8,
+         targ_audi=V9,
+         prim_visu=V10,
+         targ_visu=V11,
+         targ_resp=V12,
+         targ_rt=V13,
+         prim_resp=V14,
+         prim_rt=V15)%>%
+  filter(!(targ_rt < 300), !(targ_rt > 4000)) %>%
+  select(subj_id, trial_num, prim_cong, targ_cong, mask_audi,
+         mask_visu, prim_audi, targ_audi, prim_visu,
+         targ_visu, targ_resp, targ_rt, prim_resp, prim_rt)
+
+##Keepind only the trials with the unconscious condition (those that were used in the target outcome)
+
+data.tidy.unconscious<-subset(data.tidy, mask_visu==0)
+
+#Finding the accuracy in responses for prime and target
+
+temp = rep(0,nrow(data.tidy.unconscious))
+temp[data.tidy.unconscious$targ_cong=="rel"&data.tidy.unconscious$targ_resp==1]=1
+temp[data.tidy.unconscious$targ_cong=="unrel"&data.tidy.unconscious$targ_resp==0]=1
+data.tidy.unconscious$target_accuracy = temp
+
+temp = rep(0,nrow(data.tidy.unconscious))
+temp[data.tidy.unconscious$prim_cong=="cong"&data.tidy.unconscious$prim_resp==1]=1
+temp[data.tidy.unconscious$prim_cong=="incong"&data.tidy.unconscious$prim_resp==0]=1
+
+data.tidy.unconscious$prime_accuracy = temp
+```
+
+## Step 4: Run analysis
+
+### Descriptive statistics
+
+```{r}
+data.tidy.unconscious <- data.tidy.unconscious %>%
+mutate(prime_accuracy_pct = prime_accuracy*100)%>%
+  mutate(target_accuracy_pct = target_accuracy*100)
+```
+
+### Inferential statistics
+
+```{r}
+#obtaining prime mean, confidence interval, and ttest
+ttest <- data.tidy.unconscious%>%
+  group_by(subj_id) %>%
+  summarise(mean_prime = mean(prime_accuracy_pct))
+# compare against chance (50%), two-tailed t-test
+t.test(ttest$mean_prime, mu=50, conf.level=0.95)
+
+#obtaining target mean, confidence interval, and ttest
+ttest <- data.tidy.unconscious%>%
+  group_by(subj_id) %>%
+  summarise(mean_target = mean(target_accuracy_pct))
+# compare against chance (50%), two-tailed t-test
+t.test(ttest$mean_target, mu=50, conf.level=0.95)
+
+#Calculating the Percentage Error for each target outcomes
+
+#1 - Primes accuracy: 53.3 [50.2, 56.4]
+
+reportObject <- reproCheck(reportedValue = "53.3", obtainedValue = 53.4, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = "50.2", obtainedValue = 49.8, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = "56.4", obtainedValue = 56.9, valueType = 'ci')
+
+#2 - t-test: t(16) = 2.06, p = .06
+
+#3 - Targets Accuracy: 92.3 [89.8, 94.8]
+
+reportObject <- reproCheck(reportedValue = "92.3", obtainedValue = 92.5, valueType = 'mean')
+reportObject <- reproCheck(reportedValue = "89.8", obtainedValue = 90, valueType = 'ci')
+reportObject <- reproCheck(reportedValue = "94.8", obtainedValue = 95.1, valueType = 'ci')
+```
+
+## Step 5: Conclusion
+
+  We successfully replicated the study results. Following all the steps described in the study, we found that the authors consistently reported the results for the mean and the confidence interval of accuracy in both prime and target conditions in Experiment 01. The t-test reported by the authors was also accurate. 
+  
+  The results support the study finding that participants could accurately discriminate the similarity of audiovisual target pairs but not of audiovisual prime pairs, although the discriminability of prime pairs was close to being higher than chance in Experiment 1.  
+ 
+
+  In this replication, we found consistency between the reported results and the statistics we found. The data that was available was clear, and we could work with it without assistance from the authors. While results from this specific target outcome are consistent, however, we cannot support that all the reported data in the study is accurate. 
+
+```{r}
+Author_Assistance = FALSE # was author assistance provided? (if so, enter TRUE)
+
+Insufficient_Information_Errors <- 0 # how many discrete insufficient information issues did you encounter?
+
+# Assess the causal locus (discrete reproducibility issues) of any reproducibility errors. Note that there doesn't necessarily have to be a one-to-one correspondance between discrete reproducibility issues and reproducibility errors. For example, it could be that the original article neglects to mention that a Greenhouse-Geisser correct was applied to ANOVA outcomes. This might result in multiple reproducibility errors, but there is a single causal locus (discrete reproducibility issue).
+
+locus_typo <- NA # how many discrete issues did you encounter that related to typographical errors?
+locus_specification <- NA # how many discrete issues did you encounter that related to incomplete, incorrect, or unclear specification of the original analyses?
+locus_analysis <- NA # how many discrete issues did you encounter that related to errors in the authors' original analyses?
+locus_data <- NA # how many discrete issues did you encounter that related to errors in the data files shared by the authors?
+locus_unidentified <- NA # how many discrete issues were there for which you could not identify the cause
+
+Affects_Conclusion <- NA # Do any reproducibility issues encounter appear to affect the conclusions made in the original article? This is a subjective judgement, but you should taking into account multiple factors, such as the presence/absence of decision errors, the number of target outcomes that could not be reproduced, the type of outcomes that could or could not be reproduced, the difference in magnitude of effect sizes, and the predictions of the specific hypothesis under scrutiny.
+```
+
+```{r}
+reportObject <- reportObject %>%
+  filter(dummyRow == FALSE) %>% # remove the dummy row
+  select(-dummyRow) %>% # remove dummy row designation
+  mutate(articleID = articleID) %>% # add the articleID 
+  select(articleID, everything()) # make articleID first column
+
+# decide on final outcome
+if(any(reportObject$comparisonOutcome != "MATCH") | Insufficient_Information_Errors > 0){
+  finalOutcome <- "Failure without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Failure despite author assistance"
+  }
+}else{
+  finalOutcome <- "Success without author assistance"
+  if(Author_Assistance == T){
+    finalOutcome <- "Success with author assistance"
+  }
+}
+
+# collate report extra details
+reportExtras <- data.frame(articleID, pilotNames, copilotNames, pilotTTC, copilotTTC, pilotStartDate, copilotStartDate, completionDate, Author_Assistance, finalOutcome, Insufficient_Information_Errors, locus_typo, locus_specification, locus_analysis, locus_data, locus_unidentified)
+
+# save report objects
+if(reportType == "pilot"){
+  write_csv(reportObject, "pilotReportDetailed.csv")
+  write_csv(reportExtras, "pilotReportExtras.csv")
+}
+
+if(reportType == "final"){
+  write_csv(reportObject, "finalReportDetailed.csv")
+  write_csv(reportExtras, "finalReportExtras.csv")
+}
+```
+
+# Session Information
+
+```{r session_info, include=TRUE, echo=TRUE, results='markup'}
+devtools::session_info()
+```
