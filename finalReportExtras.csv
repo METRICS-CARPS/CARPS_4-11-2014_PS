@@ -1,2 +1,2 @@
 articleID,pilotNames,copilotNames,pilotTTC,copilotTTC,pilotStartDate,copilotStartDate,completionDate,Author_Assistance,finalOutcome,Insufficient_Information_Errors,locus_typo,locus_specification,locus_analysis,locus_data,locus_unidentified
-4-11-2014_PS,"Barbara Born, Elizabeth Blevins",Michael Frank,720,NA,2017-10-29,NA,NA,FALSE,Failure without author assistance,0,0,0,0,0,0
+4-11-2014_PS,"Barbara Born, Elizabeth Blevins",Michael Frank,720,60,2017-10-29,2018-06-13,NA,FALSE,Failure without author assistance,0,0,0,0,0,0
