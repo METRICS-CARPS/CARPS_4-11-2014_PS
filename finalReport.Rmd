@@ -15,7 +15,7 @@ pilotTTC <- 720 # insert the pilot's estimated time to complete (in minutes, fin
 copilotTTC <- 60 # insert the co- pilot's estimated time to complete (in minutes, fine to approximate) e.g., 120
 pilotStartDate <- as.Date("10/29/17", format = "%m/%d/%y") # insert the pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
 copilotStartDate <- as.Date("06/13/18", format = "%m/%d/%y") # insert the co-pilot's start date in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
-completionDate <- as.Date("", format = "%m/%d/%y") # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
+completionDate <- as.Date("06/13/18", format = "%m/%d/%y") # copilot insert the date of final report completion (after any necessary rounds of author assistance) in US format e.g., as.Date("01/25/18", format = "%m/%d/%y")
 ```
 
 -------
@@ -42,13 +42,11 @@ The accuracy refers to the percentage of correct identification of whether the p
 
 ------
 
-[The chunk below sets up some formatting options for the R Markdown document]
-
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(echo=TRUE, warning=FALSE, message=FALSE)
 ```
 
-## Step 1: Load packages
+# Step 1: Load packages
 
 
 ```{r}
@@ -64,7 +62,7 @@ library(CARPSreports) # custom report functions
 reportObject <- data.frame(dummyRow = TRUE, reportedValue = NA, obtainedValue = NA, valueType = NA, percentageError = NA, comparisonOutcome = NA, eyeballCheck = NA)
 ```
 
-## Step 2: Load data
+# Step 2: Load data
 
 ```{r}
 data1 = read.table("data/Exp1/Exp1_1.dat")
@@ -86,7 +84,7 @@ data16 = read.table("data/Exp1/Exp1_16.dat")
 data17 = read.table("data/Exp1/Exp1_17.dat")
 ```
 
-## Step 3: Tidy data
+# Step 3: Tidy data
 
 ```{r}
 #Append the datasets
@@ -133,9 +131,9 @@ temp[data.tidy.unconscious$prim_cong=="incong"&data.tidy.unconscious$prim_resp==
 data.tidy.unconscious$prime_accuracy = temp
 ```
 
-## Step 4: Run analysis
+# Step 4: Run analysis
 
-### Descriptive statistics
+## Descriptive statistics
 
 ```{r}
 data.tidy.unconscious <- data.tidy.unconscious %>%
@@ -143,7 +141,7 @@ mutate(prime_accuracy_pct = prime_accuracy*100)%>%
   mutate(target_accuracy_pct = target_accuracy*100)
 ```
 
-### Inferential statistics
+## Inferential statistics
 
 > 1 - Primes accuracy: 53.3 [50.2, 56.4]
 
@@ -194,18 +192,13 @@ reportObject <- reproCheck(reportedValue = "89.8", obtainedValue = tt_targ$conf.
                            valueType = 'ci')
 reportObject <- reproCheck(reportedValue = "94.8", obtainedValue = tt_targ$conf.int[2], 
                            valueType = 'ci')
-
 ```
 
 
-## Step 5: Conclusion
+# Step 5: Conclusion
 
-  We successfully replicated the study results. Following all the steps described in the study, we found that the authors consistently reported the results for the mean and the confidence interval of accuracy in both prime and target conditions in Experiment 1. The t-test reported by the authors was also accurate. 
+We successfully reproduced all target outcomes.
   
-  The results support the study finding that participants could accurately discriminate the similarity of audiovisual target pairs but not of audiovisual prime pairs, although the discriminability of prime pairs was close to being higher than chance in Experiment 1.  
-
-  In this replication, we found consistency between the reported results and the statistics we found. The data that was available was clear, and we could work with it without assistance from the authors. While results from this specific target outcome are consistent, however, we cannot support that all the reported data in the study is accurate. 
-
 ```{r}
 Author_Assistance = FALSE # was author assistance provided? (if so, enter TRUE)
 
